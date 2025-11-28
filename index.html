@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ride-Hailing Review Analysis Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Switched to jsDelivr for Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card-animate {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-lg border-b-4 border-blue-500">
+        <div class="max-w-7xl mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-4xl font-bold text-gray-900">🚕 Ride-Hailing Review Analysis</h1>
+                    <p class="text-gray-600 mt-2">Analyzing 13,408 reviews from Ola, Uber & Rapido | October 2025</p>
+                </div>
+                <div class="flex gap-4">
+                    <a href="https://github.com/YOUR_USERNAME/Ride-Hailing-Review-Analysis" target="_blank" 
+                       class="bg-gray-900 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition font-semibold">
+                        📂 View on GitHub
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Summary Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="stat-card bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl shadow-md border border-green-200">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-green-600 text-sm font-semibold uppercase">Ola Reviews</p>
+                        <p class="text-4xl font-bold text-green-800 mt-2">3,217</p>
+                        <p class="text-green-700 text-sm mt-1">⭐ Avg: 3.00</p>
+                    </div>
+                    <div class="text-5xl">🟢</div>
+                </div>
+            </div>
+
+            <div class="stat-card bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 rounded-xl shadow-md border border-yellow-200">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-yellow-600 text-sm font-semibold uppercase">Rapido Reviews</p>
+                        <p class="text-4xl font-bold text-yellow-800 mt-2">5,183</p>
+                        <p class="text-yellow-700 text-sm mt-1">⭐ Avg: 3.48</p>
+                    </div>
+                    <div class="text-5xl">🟡</div>
+                </div>
+            </div>
+
+            <div class="stat-card bg-gradient-to-br from-black to-gray-800 p-6 rounded-xl shadow-md border border-gray-700">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-300 text-sm font-semibold uppercase">Uber Reviews</p>
+                        <p class="text-4xl font-bold text-white mt-2">5,008</p>
+                        <p class="text-gray-300 text-sm mt-1">⭐ Avg: 3.78</p>
+                    </div>
+                    <div class="text-5xl">⚫</div>
+                </div>
+            </div>
+
+            <div class="stat-card bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl shadow-md border border-blue-200">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-blue-600 text-sm font-semibold uppercase">Total Reviews</p>
+                        <p class="text-4xl font-bold text-blue-800 mt-2">13,408</p>
+                        <p class="text-blue-700 text-sm mt-1">📊 Oct 2025</p>
+                    </div>
+                    <div class="text-5xl">📈</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Average Ratings Comparison -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8 card-animate">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">📊 Average Ratings by Platform</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="text-center p-6 bg-green-50 rounded-lg border-2 border-green-200">
+                    <div class="text-6xl font-bold text-green-700">3.00</div>
+                    <div class="text-green-600 font-semibold mt-2">Ola (29.23%)</div>
+                </div>
+                <div class="text-center p-6 bg-yellow-50 rounded-lg border-2 border-yellow-200">
+                    <div class="text-6xl font-bold text-yellow-700">3.48</div>
+                    <div class="text-yellow-600 font-semibold mt-2">Rapido (33.93%)</div>
+                </div>
+                <div class="text-center p-6 bg-gray-100 rounded-lg border-2 border-gray-300">
+                    <div class="text-6xl font-bold text-gray-800">3.78</div>
+                    <div class="text-gray-600 font-semibold mt-2">Uber (36.84%)</div>
+                </div>
+            </div>
+            <div class="mt-6 text-center">
+                <canvas id="ratingChart" class="max-w-md mx-auto"></canvas>
+            </div>
+        </div>
+
+        <!-- Category Analysis Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Pricing & Payment -->
+            <div class="bg-white rounded-xl shadow-lg p-6 card-animate">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">💰 Pricing & Payment Issues</h3>
+                <canvas id="pricingChart"></canvas>
+                <div class="mt-4 text-sm text-gray-600">
+                    <p><strong>Total:</strong> 2,149 mentions</p>
+                    <p><strong>Top Issue:</strong> Surge & High Fare (Rapido leads with 755 complaints)</p>
+                </div>
+            </div>
+
+            <!-- Cancellation & Wait Time -->
+            <div class="bg-white rounded-xl shadow-lg p-6 card-animate">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">⏱️ Cancellation & Wait Time</h3>
+                <canvas id="cancellationChart"></canvas>
+                <div class="mt-4 text-sm text-gray-600">
+                    <p><strong>Total:</strong> 1,904 mentions</p>
+                    <p><strong>Top Issue:</strong> Long Wait Time (Rapido: 412 complaints)</p>
+                </div>
+            </div>
+
+            <!-- Driver & Vehicle Quality -->
+            <div class="bg-white rounded-xl shadow-lg p-6 card-animate">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">🚗 Driver & Vehicle Quality</h3>
+                <canvas id="driverChart"></canvas>
+                <div class="mt-4 text-sm text-gray-600">
+                    <p><strong>Total:</strong> 1,062 mentions</p>
+                    <p><strong>Top Issue:</strong> Rude/Unprofessional Behavior (consistent across apps)</p>
+                </div>
+            </div>
+
+            <!-- App & Technical Issues -->
+            <div class="bg-white rounded-xl shadow-lg p-6 card-animate">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">💻 App & Technical Issues</h3>
+                <canvas id="appIssuesChart"></canvas>
+                <div class="mt-4 text-sm text-gray-600">
+                    <p><strong>Total:</strong> 1,034 mentions</p>
+                    <p><strong>Insight:</strong> Rapido has most app functionality complaints (403)</p>
+                </div>
+            </div>
+
+            <!-- Customer Support -->
+            <div class="bg-white rounded-xl shadow-lg p-6 card-animate">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">📞 Customer Support</h3>
+                <canvas id="supportChart"></canvas>
+                <div class="mt-4 text-sm text-gray-600">
+                    <p><strong>Total:</strong> 1,058 mentions</p>
+                    <p><strong>Insight:</strong> Ola has most unresponsive support complaints (389)</p>
+                </div>
+            </div>
+
+            <!-- General/Praise -->
+            <div class="bg-white rounded-xl shadow-lg p-6 card-animate">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">🎉 General/Praise</h3>
+                <canvas id="praiseChart"></canvas>
+                <div class="mt-4 text-sm text-gray-600">
+                    <p><strong>Total Positive:</strong> 8,438 mentions</p>
+                    <p><strong>Leader:</strong> Uber (3.4K positive experiences)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Insights -->
+        <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl shadow-2xl p-8 text-white mb-8">
+            <h2 class="text-3xl font-bold mb-6">🔍 Key Insights & Recommendations</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                    <h4 class="font-bold text-xl mb-2">📈 For Ola</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li>✓ Lowest rating (3.00) - needs urgent attention</li>
+                        <li>✓ Focus on reducing wait times (278 complaints)</li>
+                        <li>✓ Improve customer support responsiveness (389 complaints)</li>
+                        <li>✓ Address pricing transparency (388 surge complaints)</li>
+                    </ul>
+                </div>
+                <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                    <h4 class="font-bold text-xl mb-2">🏆 For Uber</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li>✓ Highest rating (3.78) - maintain quality</li>
+                        <li>✓ Reduce surge pricing complaints (584 mentions)</li>
+                        <li>✓ Continue strong app performance (lowest tech issues)</li>
+                        <li>✓ Leverage positive brand sentiment</li>
+                    </ul>
+                </div>
+                <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                    <h4 class="font-bold text-xl mb-2">🏍️ For Rapido</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li>✓ Most reviews (5,183) - high engagement</li>
+                        <li>✓ Fix app functionality issues (403 complaints)</li>
+                        <li>✓ Tackle cancellation problems (229 driver cancellations)</li>
+                        <li>✓ Competitive pricing - maintain this advantage</li>
+                    </ul>
+                </div>
+                <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                    <h4 class="font-bold text-xl mb-2">🎯 Industry-Wide</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li>✓ Pricing & payment = #1 complaint category</li>
+                        <li>✓ Driver behavior training needed across all platforms</li>
+                        <li>✓ Improve ETA accuracy to reduce wait time frustration</li>
+                        <li>✓ Transparent surge pricing communication critical</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center text-gray-600 py-8 border-t">
+            <p class="mb-2">Built with ❤️ using Python, Ollama (Llama 3), Playwright & Chart.js</p>
+            <p class="text-sm">Data scraped from Google Play Store • October 2025 • 13,408 reviews analyzed</p>
+            <div class="mt-4 flex justify-center gap-4">
+                <a href="https://github.com/YOUR_USERNAME/Ride-Hailing-Review-Analysis" 
+                   class="text-blue-600 hover:text-blue-800 font-semibold">GitHub Repository</a>
+                <span>|</span>
+                <a href="notebooks/exploratory_analysis.ipynb" 
+                   class="text-blue-600 hover:text-blue-800 font-semibold">Jupyter Notebooks</a>
+                <span>|</span>
+                <a href="docs/methodology.md" 
+                   class="text-blue-600 hover:text-blue-800 font-semibold">Methodology</a>
+            </div>
+            <div class="mt-4">
+                <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2FYOUR_USERNAME.github.io%2FRide-Hailing-Review-Analysis&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=views&edge_flat=false" 
+                     alt="Views" class="inline-block">
+            </div>
+        </div>
+    </main>
+
+    <script>
+        window.addEventListener('load', () => {
+            // Color schemes
+            const colors = {
+                ola: '#00a550',
+                rapido: '#ffd700',
+                uber: '#000000'
+            };
+
+            // Rating Pie Chart
+            const ratingCtx = document.getElementById('ratingChart').getContext('2d');
+            new Chart(ratingCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Ola (3.00)', 'Rapido (3.48)', 'Uber (3.78)'],
+                    datasets: [{
+                        data: [29.23, 33.93, 36.84],
+                        backgroundColor: [colors.ola, colors.rapido, colors.uber],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        title: { display: true, text: 'Market Share by Ratings' }
+                    }
+                }
+            });
+
+            // Pricing Chart
+            const pricingCtx = document.getElementById('pricingChart').getContext('2d');
+            new Chart(pricingCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Surge & High Fare', 'Toll/Extra Charge', 'Refund & Wallet', 'Coupon/Offer'],
+                    datasets: [
+                        { label: 'Ola', data: [388, 160, 63, 4], backgroundColor: colors.ola },
+                        { label: 'Rapido', data: [584, 195, 31, 9], backgroundColor: colors.rapido },
+                        { label: 'Uber', data: [755, 83, 108, 25], backgroundColor: colors.uber }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: { y: { beginAtZero: true } },
+                    plugins: { legend: { position: 'top' } }
+                }
+            });
+
+            // Cancellation Chart
+            const cancellationCtx = document.getElementById('cancellationChart').getContext('2d');
+            new Chart(cancellationCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Long Wait Time', 'Mismatch/Pickup', 'Driver Cancellation', 'Rude/Unprofessional'],
+                    datasets: [
+                        { label: 'Ola', data: [278, 236, 208, 12], backgroundColor: colors.ola },
+                        { label: 'Rapido', data: [412, 344, 229, 31], backgroundColor: colors.rapido },
+                        { label: 'Uber', data: [402, 213, 163, 16], backgroundColor: colors.uber }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: { y: { beginAtZero: true } },
+                    plugins: { legend: { position: 'top' } }
+                }
+            });
+
+            // Driver Chart
+            const driverCtx = document.getElementById('driverChart').getContext('2d');
+            new Chart(driverCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Rude/Unprofessional', 'Good Vehicle Quality', 'Well behaved'],
+                    datasets: [
+                        { label: 'Ola', data: [302, 46, 17], backgroundColor: colors.ola },
+                        { label: 'Rapido', data: [372, 47, 16], backgroundColor: colors.rapido },
+                        { label: 'Uber', data: [388, 82, 31], backgroundColor: colors.uber }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: { y: { beginAtZero: true } },
+                    plugins: { legend: { position: 'top' } }
+                }
+            });
+
+            // App Issues Chart
+            const appCtx = document.getElementById('appIssuesChart').getContext('2d');
+            new Chart(appCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['App Functionality', 'Feature Request'],
+                    datasets: [
+                        { label: 'Ola', data: [263, 4], backgroundColor: colors.ola },
+                        { label: 'Rapido', data: [320, 3], backgroundColor: colors.rapido },
+                        { label: 'Uber', data: [403, 2], backgroundColor: colors.uber }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: { y: { beginAtZero: true } },
+                    plugins: { legend: { position: 'top' } }
+                }
+            });
+
+            // Support Chart
+            const supportCtx = document.getElementById('supportChart').getContext('2d');
+            new Chart(supportCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Unresponsive/Slow', 'Good Customer Support'],
+                    datasets: [
+                        { label: 'Ola', data: [389, 11], backgroundColor: colors.ola },
+                        { label: 'Rapido', data: [261, 46], backgroundColor: colors.rapido },
+                        { label: 'Uber', data: [297, 54], backgroundColor: colors.uber }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: { y: { beginAtZero: true } },
+                    plugins: { legend: { position: 'top' } }
+                }
+            });
+
+            // Praise Chart
+            const praiseCtx = document.getElementById('praiseChart').getContext('2d');
+            new Chart(praiseCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Positive Experience'],
+                    datasets: [
+                        { label: 'Ola', data: [1600], backgroundColor: colors.ola },
+                        { label: 'Rapido', data: [3200], backgroundColor: colors.rapido },
+                        { label: 'Uber', data: [3400], backgroundColor: colors.uber }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: { y: { beginAtZero: true } },
+                    plugins: { legend: { position: 'top' } }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
