@@ -233,7 +233,7 @@
                    class="text-blue-600 hover:text-blue-800 font-semibold">Methodology</a>
             </div>
             <div class="mt-4">
-                <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fnoobrobo.github.io%2FOla-Vs-Rapido-Vs-Uber&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=views&edge_flat=false"
+                <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fnoobrobo.github.io%2FOla-Vs-Rapido-Vs-Uber&amp;count_bg=%2379C83D&amp;title_bg=%23555555&amp;icon=&amp;icon_color=%23E7E7E7&amp;title=views&amp;edge_flat=false"
                      alt="Views" class="inline-block">
             </div>
         </div>
@@ -295,4 +295,93 @@
             data: {
                 labels: ['Long Wait Time', 'Mismatch/Pickup', 'Driver Cancellation', 'Rude/Unprofessional'],
                 datasets: [
-                    { label: 'Ola', data:
+                    { label: 'Ola', data: [278, 236, 208, 12], backgroundColor: colors.ola },
+                    { label: 'Rapido', data: [412, 344, 229, 31], backgroundColor: colors.rapido },
+                    { label: 'Uber', data: [402, 213, 163, 16], backgroundColor: colors.uber }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: { y: { beginAtZero: true } },
+                plugins: { legend: { position: 'top' } }
+            }
+        });
+
+        // Driver Chart
+        const driverCtx = document.getElementById('driverChart').getContext('2d');
+        new Chart(driverCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Rude/Unprofessional', 'Good Vehicle Quality', 'Well behaved'],
+                datasets: [
+                    { label: 'Ola', data: [302, 46, 17], backgroundColor: colors.ola },
+                    { label: 'Rapido', data: [372, 47, 16], backgroundColor: colors.rapido },
+                    { label: 'Uber', data: [388, 82, 31], backgroundColor: colors.uber }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: { y: { beginAtZero: true } },
+                plugins: { legend: { position: 'top' } }
+            }
+        });
+
+        // App Issues Chart
+        const appCtx = document.getElementById('appIssuesChart').getContext('2d');
+        new Chart(appCtx, {
+            type: 'bar',
+            data: {
+                labels: ['App Functionality', 'Feature Request'],
+                datasets: [
+                    { label: 'Ola', data: [263, 4], backgroundColor: colors.ola },
+                    { label: 'Rapido', data: [320, 3], backgroundColor: colors.rapido },
+                    { label: 'Uber', data: [403, 2], backgroundColor: colors.uber }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: { y: { beginAtZero: true } },
+                plugins: { legend: { position: 'top' } }
+            }
+        });
+
+        // Support Chart
+        const supportCtx = document.getElementById('supportChart').getContext('2d');
+        new Chart(supportCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Unresponsive/Slow', 'Good Customer Support'],
+                datasets: [
+                    { label: 'Ola', data: [389, 11], backgroundColor: colors.ola },
+                    { label: 'Rapido', data: [261, 46], backgroundColor: colors.rapido },
+                    { label: 'Uber', data: [297, 54], backgroundColor: colors.uber }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: { y: { beginAtZero: true } },
+                plugins: { legend: { position: 'top' } }
+            }
+        });
+
+        // Praise Chart
+        const praiseCtx = document.getElementById('praiseChart').getContext('2d');
+        new Chart(praiseCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Positive Experience'],
+                datasets: [
+                    { label: 'Ola', data: [1600], backgroundColor: colors.ola },
+                    { label: 'Rapido', data: [3200], backgroundColor: colors.rapido },
+                    { label: 'Uber', data: [3400], backgroundColor: colors.uber }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: { y: { beginAtZero: true } },
+                plugins: { legend: { position: 'top' } }
+            }
+        });
+    </script>
+</body>
+</html>
